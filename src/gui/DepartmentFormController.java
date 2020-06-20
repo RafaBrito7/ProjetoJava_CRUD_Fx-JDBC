@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listerners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable{
@@ -50,11 +53,20 @@ public class DepartmentFormController implements Initializable{
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 			
-		} catch (DbException e) {
+		} catch (ValidationException e) {
+			setErrorMessages(e.getErrors());
+		}
+		catch (DbException e) {
 			Alerts.showAlert("Erro ao Salvar Objeto", null, e.getMessage(), AlertType.ERROR);
 		}
 
 	}
+	
+	@FXML
+	public void onBtCancelAction(ActionEvent event) {
+		Utils.currentStage(event).close();
+	}
+	
 	private void notifyDataChangeListeners() {
 		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
@@ -63,13 +75,20 @@ public class DepartmentFormController implements Initializable{
 	}
 	private Department getFormData() {
 		Department obj = new Department();
+		
+		ValidationException exception = new ValidationException("Erro de Validação!");
+		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
+		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
+			exception.addError("name", "O campo não pode ficar vazio!");
+		}
 		obj.setName(txtName.getText());
+		
+		if (exception.getErrors().size() > 0) {
+			throw exception;
+		}
 		return obj;
-	}
-	@FXML
-	public void onBtCancelAction(ActionEvent event) {
-		Utils.currentStage(event).close();
 	}
 
 	@Override
@@ -100,6 +119,14 @@ public class DepartmentFormController implements Initializable{
 	
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
+	}
+	
+	private void setErrorMessages(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		
+		if (fields.contains("name")) {
+			labelErrorName.setText(errors.get("name"));
+		}
 	}
 
 }
