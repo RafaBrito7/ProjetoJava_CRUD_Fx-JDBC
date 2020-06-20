@@ -10,7 +10,7 @@
 
 <VBox prefHeight="604.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SellerListController">
    <children>
-      <Label text="Registrar Departamento">
+      <Label text="Registrar Vendedor">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -22,8 +22,11 @@
       </ToolBar>
       <TableView fx:id="tableViewSeller" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
-          <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="Nome" />
+          <TableColumn fx:id="tableColumnId" prefWidth="50.0" text="Id" />
+          <TableColumn fx:id="tableColumnName" prefWidth="100.0" text="Nome" />
+            <TableColumn fx:id="tableColumnEmail" prefWidth="150.0" text="Email" />
+            <TableColumn fx:id="tableColumnBirthDate" prefWidth="120.0" text="Data Nascimento" />
+            <TableColumn fx:id="tableColumnBaseSalary" prefWidth="75.0" text="Salário" />
             <TableColumn fx:id="tableColumnEdit" prefWidth="55.0" />
             <TableColumn fx:id="tableColumnRemove" prefWidth="70.0" />
         </columns>
